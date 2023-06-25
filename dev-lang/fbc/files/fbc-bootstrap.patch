@@ -1,0 +1,49 @@
+diff --git a/makefile b/makefile
+index 31c26ca..6b94228 100644
+--- a/makefile
++++ b/makefile
+@@ -155,10 +155,10 @@
+ #
+ 
+ FBC := fbc
+-CFLAGS := -Wfatal-errors -O2
++CFLAGS := -Wfatal-errors ${CFLAGS}
+ # Avoid gcc exception handling bloat
+-CFLAGS += -fno-exceptions -fno-unwind-tables -fno-asynchronous-unwind-tables
+-FBFLAGS := -maxerr 1
++CFLAGS += -fno-exceptions -fno-unwind-tables -fno-asynchronous-unwind-tables -ffunction-sections -fdata-sections
++FBFLAGS := -maxerr 1 -i inc -O 2
+ AS = $(BUILD_PREFIX)as
+ AR = $(BUILD_PREFIX)ar
+ CC = $(BUILD_PREFIX)gcc
+@@ -1388,7 +1388,7 @@ ifeq ($(TARGET_ARCH),x86)
+ 	$(QUIET_AS)$(AS) --strip-local-absolute $< -o $@
+ else
+   # x86_64 etc.: .c => .o (using the same gcc options as fbc -gen gcc)
+-  BOOTSTRAP_CFLAGS := -nostdinc
++  BOOTSTRAP_CFLAGS := -O2 -nostdinc
+   BOOTSTRAP_CFLAGS += -Wall -Wno-unused-label -Wno-unused-function -Wno-unused-variable
+   BOOTSTRAP_CFLAGS += -Wno-unused-but-set-variable -Wno-main
+   BOOTSTRAP_CFLAGS += -fno-strict-aliasing -frounding-math -fwrapv
+@@ -1401,7 +1401,7 @@ endif
+ # Use gcc to link fbc from the bootstrap .o's
+ # (assuming the rtlib was built already)
+ ifneq ($(filter darwin freebsd dragonfly linux netbsd openbsd solaris,$(TARGET_OS)),)
+-  BOOTSTRAP_LIBS := -lncurses -lm -pthread
++  BOOTSTRAP_LIBS := -ltinfo -lm -pthread
+ endif
+ $(BOOTSTRAP_FBC): rtlib $(BOOTSTRAP_OBJ)
+ 	$(QUIET_LINK)$(CC) -o $@ $(libdir)/fbrt0.o bootstrap/$(FBTARGET)/*.o $(libdir)/libfb.a $(BOOTSTRAP_LIBS)
+diff --git a/src/compiler/fbc.bas b/src/compiler/fbc.bas
+index 1043002..b059371 100644
+--- a/src/compiler/fbc.bas
++++ b/src/compiler/fbc.bas
+@@ -1180,7 +1180,7 @@ private function hLinkFiles( ) as integer
+ 			dim as long cpufamily = fbGetCpuFamily( )
+ 			if cpufamily = FB_CPUFAMILY_X86_64 OrElse cpufamily = FB_CPUFAMILY_AARCH64 OrElse _
+ 				cpuFamily = FB_CPUFAMILY_PPC64 OrElse cpufamily = FB_CPUFAMILY_PPC64LE Then
+-				ldcline += " --eh-frame-hdr"
++				ldcline += " --eh-frame-hdr --gc-sections"
+ 			end if
+ 		end if
+ 	end select
