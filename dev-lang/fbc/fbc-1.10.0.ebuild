@@ -54,10 +54,10 @@ src_compile() {
 	else
 		export C_INCLUDE_PATH=/usr/lib/libffi/include
 	fi
-	emake DESTDIR="${D}" BUILD_PREFIX=/usr/bin/ prefix=/usr bootstrap-minimal V=1
-	emake DESTDIR="${D}" BUILD_PREFIX=/usr/bin/ prefix=/usr FBC=bin/fbc V=1
+	emake DESTDIR="${D}" BUILD_PREFIX=/usr/bin/ prefix=/usr TARGET=$CHOST bootstrap-minimal V=1
+	emake DESTDIR="${D}" BUILD_PREFIX=/usr/bin/ prefix=/usr TARGET=$CHOST FBC=bin/fbc V=1
 }
 
 src_install() {
-	emake DESTDIR="${D}" BUILD_PREFIX=/usr/bin/ prefix=/usr FBC=bin/fbc install
+	emake DESTDIR="${D}" BUILD_PREFIX=/usr/bin/ prefix=/usr TARGET=$CHOST FBC=bin/fbc install
 }
