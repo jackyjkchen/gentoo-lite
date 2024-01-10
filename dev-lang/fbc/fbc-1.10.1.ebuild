@@ -4,7 +4,7 @@
 EAPI=8
 
 DESCRIPTION="FreeBASIC compiler"
-SRC_URI="https://github.com/freebasic/fbc/releases/download/1.10.0/FreeBASIC-${PV}-source-bootstrap.tar.xz"
+SRC_URI="https://github.com/freebasic/fbc/releases/download/${PV}/FreeBASIC-${PV}-source-bootstrap.tar.xz"
 
 LICENSE="GPL-2+"
 KEYWORDS="amd64 x86 arm arm64"
