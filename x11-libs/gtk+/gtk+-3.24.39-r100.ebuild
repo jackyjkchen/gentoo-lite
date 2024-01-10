@@ -1,9 +1,9 @@
-# Copyright 1999-2023 Gentoo Authors
+# Copyright 1999-2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
-inherit gnome2 meson-multilib multilib virtualx
+inherit gnome2 meson-multilib multilib toolchain-funcs virtualx
 
 DESCRIPTION="Gimp ToolKit +"
 HOMEPAGE="https://www.gtk.org/"
@@ -18,7 +18,7 @@ REQUIRED_USE="
 "
 RESTRICT="!test? ( test )"
 
-KEYWORDS="alpha amd64 arm arm64 hppa ia64 loong mips ppc ppc64 riscv sparc x86 ~amd64-linux ~x86-linux ~ppc-macos ~x64-solaris"
+KEYWORDS="~alpha amd64 ~arm ~arm64 ~hppa ~ia64 ~loong ~mips ~ppc ~ppc64 ~riscv ~sparc ~x86 ~amd64-linux ~x86-linux ~ppc-macos ~x64-solaris"
 
 COMMON_DEPEND="
 	>=app-accessibility/at-spi2-core-2.46.0[introspection?,${MULTILIB_USEDEP}]
@@ -26,7 +26,7 @@ COMMON_DEPEND="
 	>=dev-libs/glib-2.57.2:2[${MULTILIB_USEDEP}]
 	media-libs/fontconfig[${MULTILIB_USEDEP}]
 	>=media-libs/harfbuzz-2.2.0:=
-	>=media-libs/libepoxy-1.4[X(+)?,${MULTILIB_USEDEP}]
+	>=media-libs/libepoxy-1.4[X(+)?,egl(+),${MULTILIB_USEDEP}]
 	virtual/libintl[${MULTILIB_USEDEP}]
 	>=x11-libs/cairo-1.14[aqua?,glib,svg(+),X?,${MULTILIB_USEDEP}]
 	>=x11-libs/gdk-pixbuf-2.30:2[introspection?,${MULTILIB_USEDEP}]
@@ -58,16 +58,11 @@ COMMON_DEPEND="
 	)
 "
 DEPEND="${COMMON_DEPEND}
-	test? (
-		media-fonts/font-cursor-misc
-		media-fonts/font-misc-misc
-	)
 	X? ( x11-base/xorg-proto )
 "
 RDEPEND="${COMMON_DEPEND}
 	>=dev-util/gtk-update-icon-cache-3
 "
-# librsvg for svg icons (PDEPEND to avoid circular dep), bug #547710
 PDEPEND="
 	vim-syntax? ( app-vim/gtk-syntax )
 "
@@ -87,6 +82,7 @@ BDEPEND="
 		app-text/docbook-xml-dtd:4.3
 		>=dev-util/gtk-doc-1.20
 	)
+	test? ( sys-apps/dbus )
 "
 
 MULTILIB_CHOST_TOOLS=(
@@ -97,6 +93,19 @@ PATCHES=(
 	# gtk-update-icon-cache is installed by dev-util/gtk-update-icon-cache
 	"${FILESDIR}"/${PN}-3.24.36-update-icon-cache.patch
 )
+
+src_prepare() {
+	default
+
+	# The border-image-excess-size.ui test is known to fail on big-endian platforms
+	# See https://gitlab.gnome.org/GNOME/gtk/-/issues/5904
+	if [[ $(tc-endian) == big ]]; then
+		sed -i \
+			-e "/border-image-excess-size.ui/d" \
+			-e "/^xfails =/a 'border-image-excess-size.ui'," \
+			testsuite/reftests/meson.build || die
+	fi
+}
 
 multilib_src_configure() {
 	local emesonargs=(
@@ -129,7 +138,7 @@ multilib_src_compile() {
 }
 
 multilib_src_test() {
-	virtx meson_src_test
+	virtx dbus-run-session meson test -C "${BUILD_DIR}" --timeout-multiplier 4 || die
 }
 
 multilib_src_install() {
