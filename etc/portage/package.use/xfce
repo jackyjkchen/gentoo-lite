@@ -1,0 +1,22 @@
+*/* -vala -introspection -gtk2 -qt5 -cups -gnome -cdda -libnotify -policykit # vaapi vdpau
+*/* VIDEO_CARDS: -* # dummy fbdev intel i965 nouveau amdgpu radeonsi radeon
+admin/sysstat lm_sensors
+app-crypt/pinentry -gtk
+app-editors/vim -sound
+app-i18n/fcitx -enchant
+app-text/xmlto -text
+app-text/xmlto -text
+dev-db/sqlite secure-delete
+dev-libs/libdbusmenu -gtk gtk3
+media-libs/freetype harfbuzz png
+media-libs/mesa -llvm -vulkan
+pp-text/xmlto -text
+sys-devel/gcc -fortran graphite zstd
+sys-devel/llvm libedit LLVM_TARGETS: -BPF -NVPTX
+sys-libs/zlib minizip
+x11-libs/motif xft
+x11-misc/lightdm -gtk
+x11-misc/xscreensaver -gdk-pixbuf -gtk
+xfce-base/thunar -trash-panel-plugin -udisks
+xfce-base/xfce4-meta minimal -upower
+xfce-base/xfce4-session -xscreensaver

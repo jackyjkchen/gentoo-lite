@@ -1,0 +1,13 @@
+#app-admin/conky
+app-editors/mousepad
+app-i18n/fcitx-cloudpinyin
+media-fonts/wqy-microhei
+x11-apps/xrandr
+x11-misc/lightdm
+
+xfce-base/xfce4-session
+xfce-base/xfce4-panel
+xfce-base/xfce4-settings
+xfce-base/xfdesktop
+xfce-base/xfwm4
+x11-terms/xfce4-terminal

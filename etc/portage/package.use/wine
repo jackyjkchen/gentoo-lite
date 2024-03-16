@@ -1,0 +1,2 @@
+app-eselect/eselect-wine -*
+app-emulation/wine-vanilla -* crossdev-mingw mingw strip ABI_X86: 64 32
