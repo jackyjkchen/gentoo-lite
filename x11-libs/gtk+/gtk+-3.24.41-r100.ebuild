@@ -40,7 +40,7 @@ COMMON_DEPEND="
 	sysprof? ( >=dev-util/sysprof-capture-3.33.2:3[${MULTILIB_USEDEP}] )
 	wayland? (
 		>=dev-libs/wayland-1.14.91[${MULTILIB_USEDEP}]
-		>=dev-libs/wayland-protocols-1.21
+		>=dev-libs/wayland-protocols-1.32
 		media-libs/mesa[wayland,${MULTILIB_USEDEP}]
 		>=x11-libs/libxkbcommon-0.2[${MULTILIB_USEDEP}]
 	)
@@ -63,6 +63,7 @@ DEPEND="${COMMON_DEPEND}
 RDEPEND="${COMMON_DEPEND}
 	>=dev-util/gtk-update-icon-cache-3
 "
+# librsvg for svg icons (PDEPEND to avoid circular dep), bug #547710
 PDEPEND="
 	vim-syntax? ( app-vim/gtk-syntax )
 "
