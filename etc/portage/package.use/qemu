@@ -2,4 +2,4 @@ dev-libs/glib static-libs
 dev-libs/libpcre2 static-libs
 sys-apps/attr static-libs
 sys-libs/zlib static-libs
-app-emulation/qemu -* static-user xattr PYTHON_TARGETS: -* python3_11 QEMU_SOFTMMU_TARGETS: -* QEMU_USER_TARGETS: -* aarch64 alpha arm hppa loongarch64 m68k mips mips64 mips64el mipsel mipsn32 mipsn32el ppc ppc64 ppc64le riscv32 riscv64 s390x sh4 sparc32plus sparc64
+app-emulation/qemu -* static-user xattr PYTHON_TARGETS: -* python3_12 QEMU_SOFTMMU_TARGETS: -* QEMU_USER_TARGETS: -* aarch64 alpha arm hppa loongarch64 m68k mips mips64 mips64el mipsel mipsn32 mipsn32el ppc ppc64 ppc64le riscv32 riscv64 s390x sh4 sparc32plus sparc64
