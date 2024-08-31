@@ -11,7 +11,7 @@ dev-perl/* minimal
 dev-python/jaraco-text -cli
 dev-python/pydantic -native-extensions
 dev-vcs/git -perl
-net-misc/curl -adns -http2 -psl
+net-misc/curl -adns -http2 -http3 -psl -quic CURL_QUIC: -openssl
 sys-apps/help2man -nls
 sys-apps/iproute2 -iptables
 sys-apps/iproute2 minimal
