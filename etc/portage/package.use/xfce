@@ -1,7 +1,8 @@
 */* -vala -introspection -gtk2 -qt5 -cups -gnome -cdda -libnotify -policykit # vaapi vdpau
 */* VIDEO_CARDS: -* # dummy fbdev intel i965 nouveau amdgpu radeonsi radeon
 admin/sysstat lm_sensors
-app-crypt/pinentry -gtk
+app-crypt/pinentry -gtk -qt6
+app-editors/mousepad -spell
 app-editors/vim -sound
 app-i18n/fcitx -enchant
 app-text/xmlto -text
