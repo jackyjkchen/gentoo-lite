@@ -1,0 +1,2 @@
+dev-libs/libgcrypt -getentropy
+sys-apps/openrc -ncurses

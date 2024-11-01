@@ -1,4 +1,10 @@
 dev-lang
 dev-libs
 net-misc
+sys-apps
+sys-fs
+sys-kernel
+sys-libs
+sys-process
+virtual
 x11-libs
