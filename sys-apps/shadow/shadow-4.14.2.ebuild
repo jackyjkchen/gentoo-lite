@@ -43,7 +43,7 @@ COMMON_DEPEND="
 "
 DEPEND="
 	${COMMON_DEPEND}
-	>=sys-kernel/linux-headers-4.14
+	>=sys-kernel/linux-headers-3.18
 "
 RDEPEND="
 	${COMMON_DEPEND}
@@ -74,7 +74,7 @@ src_configure() {
 		--enable-lastlog
 		--disable-account-tools-setuid
 		--disable-static
-		--with-btrfs
+		--without-btrfs
 		# shadow uses a bundled copy of readpassphrase if --without-libbsd
 		--with-libbsd
 		--without-group-name-max-length
