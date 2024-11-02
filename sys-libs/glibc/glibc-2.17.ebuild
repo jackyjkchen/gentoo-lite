@@ -10,7 +10,7 @@ SRC_URI="https://github.com/jackyjkchen/binaries/releases/download/glibc-2.17/gl
 LICENSE=""
 SLOT="2.2"
 KEYWORDS="amd64"
-IUSE="multilib"
+IUSE="multilib +rpc"
 DEPEND="sys-apps/locale-gen"
 
 S=${WORKDIR}/glibc-${PV}
