@@ -1,3 +1,4 @@
+app-portage/portage-utils -qmanifest
 dev-libs/libgcrypt -getentropy
 sys-apps/openrc -ncurses
 virtual/ssh minimal
