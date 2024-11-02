@@ -1,2 +1,3 @@
 dev-libs/gmp gnu99
 dev-vcs/git gnu99
+sys-boot/grub gcc7
