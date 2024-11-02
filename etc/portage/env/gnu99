@@ -1,0 +1,2 @@
+CC_FOR_BUILD="gcc -std=gnu99"
+CC="gcc -std=gnu99"
