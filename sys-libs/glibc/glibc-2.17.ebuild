@@ -51,5 +51,6 @@ src_install() {
 	fi
 	ln -s en_US "${ED}"/usr/share/i18n/locales/C || die
 	find "${ED}"/usr/share | grep -w gz | xargs gunzip || die
+	mkdir -p "${ED}"/etc/env.d/ && echo 'LDPATH="include ld.so.conf.d/*.conf"' > "${ED}"/etc/env.d/00glibc || die
 	popd > /dev/null
 }
