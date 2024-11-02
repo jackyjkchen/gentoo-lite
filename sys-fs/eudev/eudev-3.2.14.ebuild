@@ -3,7 +3,7 @@
 
 EAPI=8
 
-KV_MIN=2.6.39
+KV_MIN=3.18
 
 inherit linux-info multilib-minimal toolchain-funcs udev
 

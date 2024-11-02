@@ -20,7 +20,7 @@ VERSION_COREUTILS="8.32"
 VERSION_CRYPTSETUP="2.6.1"
 VERSION_DMRAID="1.0.0.rc16-3"
 VERSION_DROPBEAR="2020.81"
-VERSION_EUDEV="3.2.10"
+VERSION_EUDEV="3.1.5"
 VERSION_EXPAT="2.4.1"
 VERSION_E2FSPROGS="1.46.4"
 VERSION_FUSE="2.9.9"
@@ -145,15 +145,7 @@ src_unpack() {
 src_prepare() {
 	default
 
-	if [[ ${PV} == 9999* ]] ; then
-		einfo "Updating version tag"
-		GK_V="$(git describe --tags | sed 's:^v::')-git"
-		sed "/^GK_V/s,=.*,='${GK_V}',g" -i "${S}"/genkernel
-		einfo "Producing ChangeLog from Git history..."
-		pushd "${S}/.git" >/dev/null || die
-		git log > "${S}"/ChangeLog || die
-		popd >/dev/null || die
-	fi
+	eapply "${FILESDIR}"/00_fix-eudev-3.1.5.patch
 
 	# Update software.sh
 	sed -i \
