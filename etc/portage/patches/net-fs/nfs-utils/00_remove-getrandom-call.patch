@@ -1,0 +1,20 @@
+diff --git a/support/reexport/backend_sqlite.c b/support/reexport/backend_sqlite.c
+index 0eb5ea3..9c62415 100644
+--- a/support/reexport/backend_sqlite.c
++++ b/support/reexport/backend_sqlite.c
+@@ -38,14 +38,7 @@ static int getrandom(void *buf, size_t buflen, unsigned int flags)
+ 
+ static int prng_init(void)
+ {
+-	int seed;
+-
+-	if (getrandom(&seed, sizeof(seed), 0) != sizeof(seed)) {
+-		xlog(L_ERROR, "Unable to obtain seed for PRNG via getrandom()");
+-		return -1;
+-	}
+-
+-	srand(seed);
++	srand(time(NULL));
+ 	return 0;
+ }
+ 

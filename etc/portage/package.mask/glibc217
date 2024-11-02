@@ -1,5 +1,4 @@
 >=legacy-gcc/binutils-wrapper-1
->=net-fs/nfs-utils-2.6
 >=net-libs/rpcsvc-proto-1
 >=net-misc/dhcpcd-10
 >=net-misc/openssh-9.8
