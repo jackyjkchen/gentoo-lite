@@ -1,5 +1,6 @@
 dev-lang
 dev-libs
+net-fs
 net-libs
 net-misc
 sys-apps
