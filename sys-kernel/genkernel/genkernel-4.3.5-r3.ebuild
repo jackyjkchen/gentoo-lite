@@ -20,7 +20,7 @@ VERSION_COREUTILS="8.32"
 VERSION_CRYPTSETUP="2.6.1"
 VERSION_DMRAID="1.0.0.rc16-3"
 VERSION_DROPBEAR="2020.81"
-VERSION_EUDEV="3.1.5"
+VERSION_EUDEV="3.2.10"
 VERSION_EXPAT="2.4.1"
 VERSION_E2FSPROGS="1.46.4"
 VERSION_FUSE="2.9.9"
@@ -144,8 +144,6 @@ src_unpack() {
 
 src_prepare() {
 	default
-
-	eapply "${FILESDIR}"/00_fix-eudev-3.1.5.patch
 
 	# Update software.sh
 	sed -i \
