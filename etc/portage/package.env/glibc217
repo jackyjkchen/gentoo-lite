@@ -1,3 +1,4 @@
+app-emulation/qemu gcc7
 sys-boot/grub gcc7
 
 dev-libs/gmp gnu99

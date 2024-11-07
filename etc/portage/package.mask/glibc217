@@ -1,3 +1,4 @@
+>=app-emulation/qemu-6
 >=legacy-gcc/binutils-wrapper-1
 >=net-fs/nfs-utils-2.7
 >=net-libs/rpcsvc-proto-1
