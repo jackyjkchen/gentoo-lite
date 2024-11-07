@@ -1,0 +1,7 @@
+app-misc/screen
+app-admin/syslog-ng
+dev-util/pkgdev
+dev-vcs/git
+net-fs/nfs-utils
+sys-boot/grub
+sys-kernel/linux-firmware

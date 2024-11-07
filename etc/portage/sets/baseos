@@ -1,5 +1,4 @@
 app-admin/sudo
-app-admin/syslog-ng
 app-editors/vim
 app-portage/cpuid2cpuflags
 app-portage/gentoolkit
