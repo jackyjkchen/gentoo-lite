@@ -1,7 +1,15 @@
-app-misc/screen
 app-admin/syslog-ng
+app-misc/screen
+app-portage/cpuid2cpuflags
 dev-util/pkgdev
 dev-vcs/git
 net-fs/nfs-utils
+net-misc/chrony
+net-misc/dhcpcd
+sys-apps/ifplugd
+sys-apps/lm-sensors
+sys-apps/pciutils
+sys-apps/usbutils
 sys-boot/grub
 sys-kernel/linux-firmware
+sys-process/cronie
