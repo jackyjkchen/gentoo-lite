@@ -5,14 +5,9 @@ EAPI=8
 OLD_PN=udev-gentoo-scripts
 OLD_P=${OLD_PN}-${PV}
 
-if [ "${PV}" = "9999" ]; then
-	EGIT_REPO_URI="https://anongit.gentoo.org/proj/${OLD_PN}.git"
-	inherit git-r3
-else
-	SRC_URI="https://gitweb.gentoo.org/proj/${OLD_PN}.git/snapshot/${OLD_P}.tar.gz -> ${P}.tar.gz"
-	S="${WORKDIR}/${OLD_P}"
-	KEYWORDS="~alpha amd64 arm arm64 hppa ~ia64 ~loong ~m68k ~mips ppc ppc64 ~riscv ~s390 sparc x86"
-fi
+SRC_URI="https://gitweb.gentoo.org/proj/${OLD_PN}.git/snapshot/${OLD_P}.tar.gz -> ${P}.tar.gz"
+S="${WORKDIR}/${OLD_P}"
+KEYWORDS="alpha amd64 hppa m68k sh"
 
 DESCRIPTION="udev startup scripts for openrc"
 HOMEPAGE="https://wiki.gentoo.org/wiki/No_homepage"

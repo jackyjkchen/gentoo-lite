@@ -6,7 +6,7 @@ inherit prefix
 
 SRC_URI="https://github.com/openrc/${PN}/archive/${PV}.tar.gz ->
 	${P}.tar.gz"
-KEYWORDS="amd64"
+KEYWORDS="alpha amd64 hppa m68k sh"
 
 DESCRIPTION="A standalone utility to process systemd-style tmpfiles.d files"
 HOMEPAGE="https://github.com/openrc/opentmpfiles"

@@ -5,7 +5,6 @@ dev-util/pkgdev
 dev-vcs/git
 net-fs/nfs-utils
 net-misc/chrony
-net-misc/dhcpcd
 sys-apps/ifplugd
 sys-apps/lm-sensors
 sys-apps/pciutils

@@ -8,7 +8,7 @@ inherit multilib-build
 DESCRIPTION="Virtual for libudev providers"
 
 SLOT="0/1"
-KEYWORDS="amd64"
+KEYWORDS="alpha amd64 hppa m68k sh"
 IUSE=""
 
 RDEPEND="
