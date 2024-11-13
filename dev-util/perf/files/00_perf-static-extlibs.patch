@@ -1,0 +1,49 @@
+diff --git a/Makefile.config b/Makefile.config
+index 878e498..482f44b 100644
+--- a/Makefile.config
++++ b/Makefile.config
+@@ -129,7 +129,7 @@ ifdef LIBDW_DIR
+   LIBDW_CFLAGS  := -I$(LIBDW_DIR)/include
+   LIBDW_LDFLAGS := -L$(LIBDW_DIR)/lib
+ endif
+-DWARFLIBS := -ldw
++DWARFLIBS := -ldw -lbz2
+ ifeq ($(findstring -static,${LDFLAGS}),-static)
+   DWARFLIBS += -lelf -lebl -ldl -lz -llzma -lbz2
+ endif
+@@ -408,7 +408,7 @@ endif
+ 
+ ifndef NO_LIBELF
+   CFLAGS += -DHAVE_LIBELF_SUPPORT
+-  EXTLIBS += -lelf
++  EXTLIBS += -Wl,-Bstatic -lelf -Wl,-Bdynamic
+   $(call detected,CONFIG_LIBELF)
+ 
+   ifeq ($(feature-libelf-mmap), 1)
+@@ -436,7 +436,7 @@ ifndef NO_LIBELF
+     else
+       CFLAGS += -DHAVE_DWARF_SUPPORT $(LIBDW_CFLAGS)
+       LDFLAGS += $(LIBDW_LDFLAGS)
+-      EXTLIBS += ${DWARFLIBS}
++      EXTLIBS += -Wl,-Bstatic ${DWARFLIBS} -Wl,-Bdynamic
+       $(call detected,CONFIG_DWARF)
+     endif # PERF_HAVE_DWARF_REGS
+   endif # NO_DWARF
+@@ -723,7 +723,7 @@ else
+     EXTLIBS += -lbfd -liberty
+   else
+     ifeq ($(feature-libbfd-liberty-z), 1)
+-      EXTLIBS += -lbfd -liberty -lz
++      EXTLIBS += -lbfd -liberty -Wl,-Bstatic -lz -Wl,-Bdynamic
+     endif
+   endif
+ endif
+@@ -770,7 +770,7 @@ endif
+ ifndef NO_LZMA
+   ifeq ($(feature-lzma), 1)
+     CFLAGS += -DHAVE_LZMA_SUPPORT
+-    EXTLIBS += -llzma
++    EXTLIBS += -Wl,-Bstatic -llzma -Wl,-Bdynamic
+     $(call detected,CONFIG_LZMA)
+   else
+     msg := $(warning No liblzma found, disables xz kernel module decompression, please install xz-devel/liblzma-dev);

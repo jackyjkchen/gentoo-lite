@@ -14,6 +14,7 @@
 >=sys-devel/gettext-0.22
 >=sys-kernel/genkernel-4.3.6
 >=sys-kernel/linux-headers-3.19
+>=sys-libs/binutils-libs-2.31
 >=sys-libs/efivar-38
 >=sys-libs/glibc-2.18
 >=sys-process/psmisc-23.7

@@ -1,0 +1,4 @@
+app-arch/bzip2 static-libs
+dev-libs/elfutils static-libs
+dev-util/perf -crypt
+sys-libs/zlib static-libs
