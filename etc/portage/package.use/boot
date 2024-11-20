@@ -1,4 +1,4 @@
 app-portage/portage-utils -qmanifest
 media-libs/freetype -png
-sys-firmware/intel-microcode initramfs redistributable
+sys-firmware/intel-microcode initramfs
 sys-kernel/linux-firmware initramfs compress-xz
