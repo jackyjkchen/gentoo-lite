@@ -6,13 +6,13 @@ EAPI=8
 # Bumping notes: https://wiki.gentoo.org/wiki/Project:Toolchain/sys-libs/glibc
 # Please read & adapt the page as necessary if obsolete.
 
-PYTHON_COMPAT=( python3_{10..12} )
+PYTHON_COMPAT=( python3_{10..13} )
 TMPFILES_OPTIONAL=1
 
 EMULTILIB_PKG="true"
 
 # Gentoo patchset (ignored for live ebuilds)
-PATCH_VER=6
+PATCH_VER=5
 PATCH_DEV=dilfridge
 
 # gcc mulitilib bootstrap files version
@@ -38,13 +38,9 @@ inherit python-any-r1 prefix preserve-libs toolchain-funcs flag-o-matic gnuconfi
 DESCRIPTION="GNU libc C library"
 HOMEPAGE="https://www.gnu.org/software/libc/"
 
-if [[ ${PV} == 9999* ]]; then
-	inherit git-r3
-else
-	KEYWORDS="sparc"
-	SRC_URI="mirror://gnu/glibc/${P}.tar.xz"
-	SRC_URI+=" https://dev.gentoo.org/~${PATCH_DEV}/distfiles/${P}-patches-${PATCH_VER}.tar.xz"
-fi
+KEYWORDS="sparc"
+SRC_URI="mirror://gnu/glibc/${P}.tar.xz"
+SRC_URI+=" https://dev.gentoo.org/~${PATCH_DEV}/distfiles/${P}-patches-${PATCH_VER}.tar.xz"
 
 SRC_URI+=" multilib-bootstrap? ( https://dev.gentoo.org/~dilfridge/distfiles/gcc-multilib-bootstrap-${GCC_BOOTSTRAP_VER}.tar.xz )"
 SRC_URI+=" systemd? ( https://gitweb.gentoo.org/proj/toolchain/glibc-systemd.git/snapshot/glibc-systemd-${GLIBC_SYSTEMD_VER}.tar.gz )"
@@ -181,6 +177,9 @@ XFAIL_TEST_LIST=(
 
 	# Fails regularly, unreliable
 	tst-valgrind-smoke
+
+	# https://sourceware.org/bugzilla/show_bug.cgi?id=31877 (bug #927973)
+	tst-shstk-legacy-1g
 )
 
 XFAIL_NSPAWN_TEST_LIST=(
@@ -366,16 +365,6 @@ setup_target_flags() {
 				fi
 				# For compatibility with older binaries at slight performance cost.
 				use stack-realign && export CFLAGS_x86+=" -mstackrealign"
-
-				# Workaround for bug #823780.
-				# Need to save/restore CC because earlier on, we stuff it full of CFLAGS, and tc-getCPP doesn't like that.
-				CC_mangled=${CC}
-				CC=${glibc__GLIBC_CC}
-				if tc-is-gcc && (($(gcc-major-version) == 11)) && (($(gcc-minor-version) <= 2)) && (($(gcc-micro-version) == 0)) ; then
-					export CFLAGS_x86="${CFLAGS_x86} -mno-avx512f"
-					einfo "Auto adding -mno-avx512f to CFLAGS_x86 for buggy GCC version (bug #823780) (ABI=${ABI})"
-				fi
-				CC=${CC_mangled}
 			fi
 		;;
 		mips)
@@ -477,6 +466,11 @@ setup_flags() {
 	# anyway because glibc already handles this by itself.
 	filter-ldflags '-Wl,--dynamic-linker=*'
 
+	# Fails to link (bug #940709) in some cases but even if it manages to,
+	# subtle runtime breakage will occur because the linker scripts need
+	# adaptation. Mentioned in PR21557#c0.
+	filter-ldflags '-Wl,--gc-sections'
+
 	# some weird software relies on sysv hashes in glibc, bug 863863, bug 864100
 	# we have to do that here already so mips can filter it out again :P
 	if use hash-sysv-compat ; then
@@ -488,6 +482,9 @@ setup_flags() {
 
 	# #898098
 	filter-flags -fno-builtin
+
+	# #798774
+	filter-flags -fno-semantic-interposition
 
 	# #829583
 	filter-lfs-flags
@@ -527,11 +524,14 @@ setup_flags() {
 	# dealing with CET in ld.so. So if CET is supposed to be
 	# disabled for glibc, be explicit about it.
 	if ! use cet; then
-		if use amd64 || use x86; then
-			append-flags '-fcf-protection=none'
-		elif use arm64; then
-			append-flags '-mbranch-protection=none'
-		fi
+		case ${ABI}-${CTARGET} in
+			amd64-x86_64-*|x32-x86_64-*-*-gnux32)
+				append-flags '-fcf-protection=none'
+				;;
+			arm64-aarch64*)
+				append-flags '-mbranch-protection=none'
+				;;
+		esac
 	fi
 }
 
@@ -591,8 +591,10 @@ setup_env() {
 		return 0
 	fi
 
-	# Glibc does not work with gold (for various reasons) #269274.
-	tc-ld-disable-gold
+	# glibc does not work with non-bfd (for various reasons):
+	# * gold (bug #269274)
+	# * mold (bug #860900)
+	tc-ld-force-bfd
 
 	if use doc ; then
 		export MAKEINFO=makeinfo
@@ -839,7 +841,7 @@ sanity_prechecks() {
 	# we test for...
 	if ! is_crosscompile ; then
 		if use amd64 && use multilib && [[ ${MERGE_TYPE} != "binary" ]] ; then
-			ebegin "Checking that IA32 emulation is enabled in the running kernel"
+			ebegin "Checking if the system can execute 32-bit binaries"
 			echo 'int main(){return 0;}' > "${T}/check-ia32-emulation.c"
 			local STAT
 			if ${CC-${CHOST}-gcc} ${CFLAGS_x86} "${T}/check-ia32-emulation.c" -o "${T}/check-ia32-emulation.elf32"; then
@@ -853,7 +855,11 @@ sanity_prechecks() {
 			fi
 			rm -f "${T}/check-ia32-emulation.elf32"
 			eend $STAT
-			[[ $STAT -eq 0 ]] || die "CONFIG_IA32_EMULATION must be enabled in the kernel to compile a multilib glibc."
+			if [[ $STAT -ne 0 ]]; then
+				eerror "Ensure that CONFIG_IA32_EMULATION is enabled in the kernel."
+				eerror "Seek support otherwise."
+				die "Unable to execute 32-bit binaries"
+			fi
 		fi
 
 	fi
@@ -1006,7 +1012,7 @@ glibc_do_configure() {
 	# worth protecting from stack smashes.
 	myconf+=( --enable-stack-protector=$(usex ssp strong no) )
 
-	# Keep a whitelist of targets supporing IFUNC. glibc's ./configure
+	# Keep a whitelist of targets supporting IFUNC. glibc's ./configure
 	# is not robust enough to detect proper support:
 	#    https://bugs.gentoo.org/641216
 	#    https://sourceware.org/PR22634#c0
