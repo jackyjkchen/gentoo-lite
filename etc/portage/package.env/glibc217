@@ -5,3 +5,5 @@ dev-libs/gmp gnu99
 dev-python/cython gnu99
 dev-vcs/git gnu99
 sys-fs/eudev gnu99
+
+sys-apps/sandbox stack_realign
