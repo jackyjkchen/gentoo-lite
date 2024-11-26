@@ -1,4 +1,4 @@
-*/* -vala -introspection -gtk2 -qt5 -cups -gnome -cdda -libnotify -policykit # vaapi vdpau
+*/* -wayland -vala -introspection -gtk2 -qt5 -cups -gnome -cdda -libnotify -policykit # vaapi vdpau
 */* VIDEO_CARDS: -* # dummy fbdev intel i965 nouveau amdgpu radeonsi radeon
 admin/sysstat lm_sensors
 app-crypt/pinentry -gtk -qt6
@@ -9,7 +9,7 @@ app-text/xmlto -text
 app-text/xmlto -text
 dev-db/sqlite secure-delete
 dev-libs/libdbusmenu -gtk gtk3
-media-libs/freetype harfbuzz png
+media-libs/freetype -harfbuzz png
 media-libs/mesa -llvm -vulkan
 pp-text/xmlto -text
 sys-devel/gcc -fortran graphite zstd
