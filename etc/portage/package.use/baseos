@@ -2,7 +2,7 @@
 app-admin/sudo -sendmail
 app-arch/pigz symlink
 app-arch/tar minimal
-app-crypt/gnupg -tofu
+app-crypt/gnupg -ssl -tofu
 app-editors/vim -crypt
 app-text/mandoc system-man
 dev-lang/perl minimal
