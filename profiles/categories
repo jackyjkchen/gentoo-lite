@@ -6,6 +6,7 @@ net-fs
 net-libs
 net-misc
 sys-apps
+sys-devel
 sys-fs
 sys-kernel
 sys-libs
