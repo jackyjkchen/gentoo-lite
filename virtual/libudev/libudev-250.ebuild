@@ -8,7 +8,7 @@ inherit multilib-build
 DESCRIPTION="Virtual for libudev providers"
 
 SLOT="0/1"
-KEYWORDS="alpha amd64 hppa m68k sh sparc"
+KEYWORDS="alpha amd64 hppa m68k mips ppc ppc64 s390 sh sparc"
 IUSE=""
 
 RDEPEND="

@@ -11,7 +11,7 @@ MY_PV=${PV/_pre/-pre}
 SRC_URI="https://github.com/eudev-project/eudev/releases/download/v${MY_PV}/${PN}-${MY_PV}.tar.gz"
 S="${WORKDIR}"/${PN}-${MY_PV}
 
-KEYWORDS="alpha amd64 hppa m68k sh sparc"
+KEYWORDS="alpha amd64 hppa m68k mips ppc ppc64 s390 sh sparc"
 
 DESCRIPTION="Linux dynamic and persistent device naming support (aka userspace devfs)"
 HOMEPAGE="https://github.com/eudev-project/eudev"

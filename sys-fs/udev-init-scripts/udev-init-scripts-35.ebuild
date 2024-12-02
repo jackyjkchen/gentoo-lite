@@ -7,7 +7,7 @@ OLD_P=${OLD_PN}-${PV}
 
 SRC_URI="https://gitweb.gentoo.org/proj/${OLD_PN}.git/snapshot/${OLD_P}.tar.gz -> ${P}.tar.gz"
 S="${WORKDIR}/${OLD_P}"
-KEYWORDS="alpha amd64 hppa m68k sh sparc"
+KEYWORDS="alpha amd64 hppa m68k mips ppc ppc64 s390 sh sparc"
 
 DESCRIPTION="udev startup scripts for openrc"
 HOMEPAGE="https://wiki.gentoo.org/wiki/No_homepage"
