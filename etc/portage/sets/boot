@@ -1,4 +1,4 @@
-app-admin/syslog-ng
+app-admin/logrotate
 app-misc/screen
 app-portage/cpuid2cpuflags
 dev-debug/strace
