@@ -14,14 +14,14 @@ LICENSE=""
 SLOT="2.2"
 KEYWORDS="amd64"
 IUSE="multilib +rpc"
-DEPEND="sys-apps/locale-gen"
+DEPEND="sys-apps/locale-gen
+	sys-libs/timezone-data"
 
 S=${WORKDIR}/glibc-${PV}
 
 src_unpack() {
 	mkdir -p "${S}" || die
 	tar -pxf "${DISTDIR}"/glibc-${PV}-multilib-x86_64.tar.xz -C "${S}" || die
-	tar -pxf "${DISTDIR}"/tzdata-2024a.tar.xz -C "${S}" || die
 }
 
 src_prepare() {
