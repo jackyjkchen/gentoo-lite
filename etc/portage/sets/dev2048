@@ -5,6 +5,7 @@ dev-lang/go
 dev-lang/mono
 dev-lang/lua
 dev-lang/rust
+dev-lang/ruby
 dev-perl/Term-ANSIScreen
 dev-perl/TermReadKey
-dev-python/pypy
+net-libs/nodejs
