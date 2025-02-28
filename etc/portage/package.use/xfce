@@ -11,6 +11,7 @@ dev-db/sqlite secure-delete
 dev-libs/libdbusmenu -gtk gtk3
 media-libs/freetype -harfbuzz png
 media-libs/mesa -llvm -vulkan
+media-libs/tiff -opengl
 pp-text/xmlto -text
 sys-devel/gcc -fortran graphite zstd
 sys-devel/llvm libedit LLVM_TARGETS: -BPF -NVPTX
