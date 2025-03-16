@@ -1,0 +1,37 @@
+diff --git a/c++/Makefile.in b/c++/Makefile.in
+index 61e25e6..0c6c588 100644
+--- a/c++/Makefile.in
++++ b/c++/Makefile.in
+@@ -87,7 +87,7 @@ RANLIB		= @LIB_PREP@
+ 
+ CXX		= @CXX@
+ CPP		= @CXXCPP@
+-CXXFLAGS	= @CXXFLAGS@ @EXTRA_CXXFLAGS@
++CXXFLAGS	= @CXXFLAGS@ @EXTRA_CXXFLAGS@ -std=gnu++11
+ CXXLIBS		= @CXXLIBS@
+ 
+ INCDIR		= ../include
+diff --git a/c++/cursesf.cc b/c++/cursesf.cc
+index 747564d..913a2fd 100644
+--- a/c++/cursesf.cc
++++ b/c++/cursesf.cc
+@@ -35,6 +35,7 @@
+ #include "internal.h"
+ #include "cursesf.h"
+ #include "cursesapp.h"
++#include <new>
+ 
+ MODULE_ID("$Id: cursesf.cc,v 1.28 2025/01/25 21:20:17 tom Exp $")
+ 
+diff --git a/c++/cursesm.cc b/c++/cursesm.cc
+index e755391..a3eea60 100644
+--- a/c++/cursesm.cc
++++ b/c++/cursesm.cc
+@@ -35,6 +35,7 @@
+ #include "internal.h"
+ #include "cursesm.h"
+ #include "cursesapp.h"
++#include <new>
+ 
+ MODULE_ID("$Id: cursesm.cc,v 1.29 2025/01/25 21:20:17 tom Exp $")
+ 
