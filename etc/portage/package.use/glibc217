@@ -1,4 +1,5 @@
 app-portage/portage-utils -qmanifest
+dev-debug/gdb -cet -nls -server lzma
 dev-libs/libgcrypt -getentropy
 sys-apps/openrc -ncurses
 sys-fs/e2fsprogs archive

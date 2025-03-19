@@ -1,5 +1,6 @@
 app-emulation/qemu gcc7
 sys-boot/grub gcc7
+dev-debug/gdb gcc7
 
 dev-libs/gmp gnu99
 dev-python/cython gnu99
