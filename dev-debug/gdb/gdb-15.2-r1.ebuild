@@ -318,7 +318,7 @@ _EOF_
 export LD_LIBRARY_PATH=${PREFIX}/scripts
 ${PREFIX}/bin/gcore1 "\$@"
 _EOF_
-	chmod +x ${ED}/${PREFIX}/bin/*
+		chmod +x ${ED}/${PREFIX}/bin/*
 	fi
 }
 
