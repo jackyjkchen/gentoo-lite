@@ -2,8 +2,10 @@ app-emulation/qemu gcc7
 sys-boot/grub gcc7
 dev-debug/gdb gcc7
 
+app-crypt/rhash gnu99
 dev-libs/gmp gnu99
 dev-python/cython gnu99
+dev-python/pillow gnu99
 dev-vcs/git gnu99
 sys-apps/lm-sensors gnu99
 sys-fs/eudev gnu99
