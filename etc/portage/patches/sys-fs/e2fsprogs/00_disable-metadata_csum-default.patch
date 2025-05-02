@@ -12,15 +12,15 @@ index 9c8e53e..bc35894 100644
  /* If ./configure was run with --without-libarchive, then only
   * __populate_fs_from_tar() remains in this file and will return an error. */
 diff --git a/misc/mke2fs.conf.in b/misc/mke2fs.conf.in
-index 0568099..0aa3029 100644
+index b7fc95d..e10d7d0 100644
 --- a/misc/mke2fs.conf.in
 +++ b/misc/mke2fs.conf.in
 @@ -11,7 +11,7 @@
  		features = has_journal
  	}
  	ext4 = {
--		features = has_journal,extent,huge_file,flex_bg,metadata_csum,64bit,dir_nlink,extra_isize
-+		features = has_journal,extent,huge_file,flex_bg,64bit,dir_nlink,extra_isize
+-		features = has_journal,extent,huge_file,flex_bg,metadata_csum,metadata_csum_seed,64bit,dir_nlink,extra_isize,orphan_file
++		features = has_journal,extent,huge_file,flex_bg,64bit,dir_nlink,extra_isize,orphan_file
  	}
  	small = {
  		blocksize = 1024
