@@ -1,4 +1,4 @@
-*/* -doc -man -seccomp PYTHON_TARGETS: -* python3_12 PYTHON_SINGLE_TARGET: -* python3_12
+*/* -doc -man -seccomp PYTHON_TARGETS: -* python3_13 PYTHON_SINGLE_TARGET: -* python3_13
 app-admin/sudo -sendmail
 app-arch/pigz symlink
 app-arch/tar minimal
