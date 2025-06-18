@@ -18,6 +18,7 @@ sys-apps/help2man -nls
 sys-apps/iproute2 -iptables
 sys-apps/iproute2 minimal
 sys-apps/man-db -nls
+sys-apps/man-pages -*
 sys-apps/miscfiles minimal
 sys-apps/portage -rsync-verify
 sys-apps/smartmontools -daemon
@@ -25,7 +26,6 @@ sys-apps/sysvinit -nls
 sys-apps/util-linux -nls
 sys-devel/gettext -nls
 sys-kernel/installkernel -dracut
-sys-process/procps -nls
 sys-libs/glibc stack-realign
 sys-libs/ncurses minimal
 sys-libs/tdb python
