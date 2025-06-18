@@ -1,5 +1,6 @@
 >=app-emulation/qemu-6
 >=legacy-gcc/binutils-wrapper-1
+>=dev-libs/openssl-3.4
 >=net-fs/nfs-utils-2.7
 >=net-libs/rpcsvc-proto-1
 >=net-misc/dhcpcd-7
