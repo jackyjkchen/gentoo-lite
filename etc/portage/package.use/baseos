@@ -25,6 +25,7 @@ sys-apps/sysvinit -nls
 sys-apps/util-linux -nls
 sys-devel/gettext -nls
 sys-kernel/installkernel -dracut
+sys-process/procps -nls
 sys-libs/glibc stack-realign
 sys-libs/ncurses minimal
 sys-libs/tdb python
