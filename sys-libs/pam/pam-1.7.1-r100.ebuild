@@ -9,7 +9,7 @@ MY_P="Linux-${PN^^}-${PV}"
 # Can reconsider w/ EAPI 8 and IDEPEND, bug #810979
 TMPFILES_OPTIONAL=1
 
-inherit db-use fcaps flag-o-matic meson-multilib
+inherit db-use fcaps flag-o-matic meson-multilib toolchain-funcs
 
 DESCRIPTION="Linux-PAM (Pluggable Authentication Modules)"
 HOMEPAGE="https://github.com/linux-pam/linux-pam"
@@ -35,7 +35,7 @@ fi
 
 LICENSE="|| ( BSD GPL-2 )"
 SLOT="0"
-KEYWORDS="alpha amd64 arm arm64 hppa loong m68k mips ppc ppc64 riscv s390 sh sparc x86"
+KEYWORDS="alpha amd64 arm arm64 hppa loong m68k mips ppc ppc64 riscv s390 sparc x86 ~amd64-linux ~x86-linux"
 IUSE="audit berkdb elogind examples debug nis nls selinux systemd"
 REQUIRED_USE="?? ( elogind systemd )"
 
@@ -63,6 +63,11 @@ DEPEND="
 RDEPEND="${DEPEND}"
 PDEPEND=">=sys-auth/pambase-20200616"
 
+PATCHES=(
+	"${FILESDIR}"/${P}-32-bit-lastlog.patch
+	"${FILESDIR}"/${P}-32-bit-timestamp.patch
+)
+
 src_configure() {
 	# meson.build sets -Wl,--fatal-warnings and with e.g. mold, we get:
 	#  cannot assign version `global` to symbol `pam_sm_open_session`: symbol not found
@@ -75,11 +80,11 @@ src_configure() {
 }
 
 multilib_src_configure() {
-	local native_file="${T}"/meson.${CHOST}.${ABI}.ini.local
+	local machine_file="${T}/meson.${CHOST}.${ABI}.ini.local"
 	# Workaround for docbook5 not being packaged (bug #913087#c4)
 	# It's only used for validation of output, so stub it out.
 	# Also, stub out elinks+w3m which are only used for an index.
-	cat >> ${native_file} <<-EOF || die
+	cat >> "${machine_file}" <<-EOF || die
 	[binaries]
 	xmlcatalog='true'
 	xmllint='true'
@@ -87,9 +92,15 @@ multilib_src_configure() {
 	w3m='true'
 	EOF
 
-	local emesonargs=(
-		--native-file "${native_file}"
+	local emesonargs=()
 
+	if tc-is-cross-compiler; then
+		emesonargs+=( --cross-file "${machine_file}" )
+	else
+		emesonargs+=( --native-file "${machine_file}" )
+	fi
+
+	emesonargs+=(
 		$(meson_feature audit)
 		$(meson_native_use_bool examples)
 		$(meson_use debug pam-debug)
@@ -105,9 +116,6 @@ multilib_src_configure() {
 		-Dhtmldir="${EPREFIX}"/usr/share/doc/${PF}/html
 		-Dpdfdir="${EPREFIX}"/usr/share/doc/${PF}/pdf
 
-		-Ddb=$(usex berkdb 'db' 'gdbm')
-		-Ddb-uniquename=$(db_findver sys-libs/db)
-
 		-Ddocs=disabled
 
 		-Dpam_unix=enabled
@@ -122,6 +130,20 @@ multilib_src_configure() {
 		$(meson_native_use_feature elogind)
 		$(meson_feature !elibc_musl pam_lastlog)
 	)
+
+	if use berkdb; then
+		local dbver
+		dbver="$(db_findver sys-libs/db)" || die "could not find db version"
+		local -x CPPFLAGS="${CPPFLAGS} -I$(db_includedir "${dbver}")"
+		emesonargs+=(
+			-Ddb=db
+			-Ddb-uniquename="-${dbver}"
+		)
+	else
+		emesonargs+=(
+			-Ddb=gdbm
+		)
+	fi
 
 	# This whole weird has_version libxcrypt block can go once
 	# musl systems have libxcrypt[system] if we ever make
