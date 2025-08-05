@@ -1,4 +1,4 @@
-# Copyright 1999-2024 Gentoo Authors
+# Copyright 1999-2025 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -12,7 +12,7 @@ TMPFILES_OPTIONAL=1
 EMULTILIB_PKG="true"
 
 # Gentoo patchset (ignored for live ebuilds)
-PATCH_VER=5
+PATCH_VER=7
 PATCH_DEV=dilfridge
 
 # gcc mulitilib bootstrap files version
@@ -33,7 +33,7 @@ MIN_PAX_UTILS_VER="1.3.3"
 MIN_SYSTEMD_VER="254.9-r1"
 
 inherit python-any-r1 prefix preserve-libs toolchain-funcs flag-o-matic gnuconfig \
-	multilib systemd multiprocessing tmpfiles
+	multilib systemd multiprocessing tmpfiles eapi9-ver
 
 DESCRIPTION="GNU libc C library"
 HOMEPAGE="https://www.gnu.org/software/libc/"
@@ -114,6 +114,7 @@ BDEPEND="
 	test? (
 		dev-lang/perl
 		>=net-dns/libidn2-2.3.0
+		sys-apps/gawk[mpfr]
 	)
 "
 COMMON_DEPEND="
@@ -174,6 +175,7 @@ XFAIL_TEST_LIST=(
 
 	# Fails with certain PORTAGE_NICENESS/PORTAGE_SCHEDULING_POLICY
 	tst-sched1
+	tst-sched_setattr
 
 	# Fails regularly, unreliable
 	tst-valgrind-smoke
@@ -187,6 +189,7 @@ XFAIL_NSPAWN_TEST_LIST=(
 	# upstream, as systemd-nspawn's default seccomp whitelist is too strict.
 	# https://sourceware.org/PR30603
 	test-errno-linux
+	tst-aarch64-pkey
 	tst-bz21269
 	tst-mlock2
 	tst-ntp_gettime
@@ -244,29 +247,9 @@ build_eprefix() {
 	is_crosscompile && echo "${EPREFIX}"
 }
 
-# We need to be able to set alternative headers for compiling for non-native
-# platform. Will also become useful for testing kernel-headers without screwing
-# up the whole system.
 alt_headers() {
-	echo ${ALT_HEADERS:=$(alt_prefix)/usr/include}
+	echo $(alt_prefix)/usr/include
 }
-
-alt_build_headers() {
-	if [[ -z ${ALT_BUILD_HEADERS} ]] ; then
-		ALT_BUILD_HEADERS="$(host_eprefix)$(alt_headers)"
-		if tc-is-cross-compiler ; then
-			ALT_BUILD_HEADERS=${SYSROOT}$(alt_headers)
-			if [[ ! -e ${ALT_BUILD_HEADERS}/linux/version.h ]] ; then
-				local header_path=$(echo '#include <linux/version.h>' \
-					| $(tc-getCPP ${CTARGET}) ${CFLAGS} 2>&1 \
-					| grep -o '[^"]*linux/version.h')
-				ALT_BUILD_HEADERS=${header_path%/linux/version.h}
-			fi
-		fi
-	fi
-	echo "${ALT_BUILD_HEADERS}"
-}
-
 alt_libdir() {
 	echo $(alt_prefix)/$(get_libdir)
 }
@@ -305,9 +288,13 @@ do_run_test() {
 		# ignore build failures when installing a binary package #324685
 		do_compile_test "" "$@" 2>/dev/null || return 0
 	else
+		ebegin "Performing simple compile test for ABI=${ABI}"
 		if ! do_compile_test "" "$@" ; then
 			ewarn "Simple build failed ... assuming this is desired #324685"
+			eend 1
 			return 0
+		else
+			eend 0
 		fi
 	fi
 
@@ -506,10 +493,6 @@ setup_flags() {
 	# https://sourceware.org/glibc/wiki/FAQ#Why_do_I_get:.60.23error_.22glibc_cannot_be_compiled_without_optimization.22.27.2C_when_trying_to_compile_GNU_libc_with_GNU_CC.3F
 	replace-flags -O0 -O1
 
-	# glibc handles this internally already where it's appropriate;
-	# can't always have SSP when we're the ones setting it up, etc
-	filter-flags '-fstack-protector*'
-
 	# Similar issues as with SSP. Can't inject yourself that early.
 	filter-flags '-fsanitize=*'
 
@@ -630,13 +613,13 @@ setup_env() {
 		# Last, we need the settings of the *build* environment, not of the
 		# target environment...
 
-		local current_binutils_path=$(env ROOT="${BROOT}" binutils-config -B)
+		local current_binutils_path=$(env CHOST="${CBUILD}" ROOT="${BROOT}" binutils-config -B "${CTARGET}")
 		local current_gcc_path=$(env ROOT="${BROOT}" gcc-config -B)
 		einfo "Overriding clang configuration, since it won't work here"
 
-		export CC="${current_gcc_path}/gcc"
-		export CPP="${current_gcc_path}/cpp"
-		export CXX="${current_gcc_path}/g++"
+		export CC="${current_gcc_path}/${CTARGET}-gcc"
+		export CPP="${current_gcc_path}/${CTARGET}-cpp"
+		export CXX="${current_gcc_path}/${CTARGET}-g++"
 		export LD="${current_binutils_path}/ld.bfd"
 		export AR="${current_binutils_path}/ar"
 		export AS="${current_binutils_path}/as"
@@ -793,7 +776,7 @@ eend_KV() {
 
 get_kheader_version() {
 	printf '#include <linux/version.h>\nLINUX_VERSION_CODE\n' | \
-	$(tc-getCPP ${CTARGET}) -I "$(build_eprefix)$(alt_build_headers)" - | \
+	$(tc-getCPP ${CTARGET}) -I "${ESYSROOT}$(alt_headers)" - | \
 	tail -n 1
 }
 
@@ -913,16 +896,12 @@ upgrade_warning() {
 	is_crosscompile && return
 
 	if [[ ${MERGE_TYPE} != buildonly && -n ${REPLACING_VERSIONS} && -z ${ROOT} ]]; then
-		local oldv newv=$(ver_cut 1-2 ${PV})
-		for oldv in ${REPLACING_VERSIONS}; do
-			if ver_test ${oldv} -lt ${newv}; then
-				ewarn "After upgrading glibc, please restart all running processes."
-				ewarn "Be sure to include init (telinit u) or systemd (systemctl daemon-reexec)."
-				ewarn "Alternatively, reboot your system."
-				ewarn "(See bug #660556, bug #741116, bug #823756, etc)"
-				break
-			fi
-		done
+		if ver_replacing -lt $(ver_cut 1-2 ${PV}); then
+			ewarn "After upgrading glibc, please restart all running processes."
+			ewarn "Be sure to include init (telinit u) or systemd (systemctl daemon-reexec)."
+			ewarn "Alternatively, reboot your system."
+			ewarn "(See bug #660556, bug #741116, bug #823756, etc)"
+		fi
 	fi
 }
 
@@ -954,12 +933,18 @@ src_unpack() {
 	use multilib-bootstrap && unpack gcc-multilib-bootstrap-${GCC_BOOTSTRAP_VER}.tar.xz
 
 	if [[ ${PV} == 9999* ]] ; then
-		EGIT_REPO_URI="https://anongit.gentoo.org/git/proj/toolchain/glibc-patches.git"
+		EGIT_REPO_URI="
+			https://anongit.gentoo.org/git/proj/toolchain/glibc-patches.git
+			https://github.com/gentoo/glibc-patches.git
+		"
 		EGIT_CHECKOUT_DIR=${WORKDIR}/patches-git
 		git-r3_src_unpack
 		mv patches-git/9999 patches || die
-
-		EGIT_REPO_URI="https://sourceware.org/git/glibc.git"
+		EGIT_REPO_URI="
+			https://sourceware.org/git/glibc.git
+			https://git.sr.ht/~sourceware/glibc
+			https://gitlab.com/x86-glibc/glibc.git
+		"
 		EGIT_CHECKOUT_DIR=${S}
 		git-r3_src_unpack
 	else
@@ -987,6 +972,15 @@ src_prepare() {
 		eapply "${WORKDIR}"/patches
 		einfo "Done."
 	fi
+
+	case ${CTARGET} in
+		m68*-aligned-*)
+			einfo "Applying utmp format fix for m68k with -maligned-int"
+			eapply "${FILESDIR}/glibc-2.41-m68k-malign.patch"
+			;;
+		*)
+			;;
+	esac
 
 	default
 
@@ -1066,7 +1060,7 @@ glibc_do_configure() {
 		--host=${CTARGET_OPT:-${CTARGET}}
 		$(use_enable profile)
 		$(use_with gd)
-		--with-headers=$(build_eprefix)$(alt_build_headers)
+		--with-headers="${ESYSROOT}$(alt_headers)"
 		--prefix="$(host_eprefix)/usr"
 		--sysconfdir="$(host_eprefix)/etc"
 		--localstatedir="$(host_eprefix)/var"
@@ -1229,7 +1223,7 @@ glibc_headers_configure() {
 		--enable-bind-now
 		--build=${CBUILD_OPT:-${CBUILD}}
 		--host=${CTARGET_OPT:-${CTARGET}}
-		--with-headers=$(build_eprefix)$(alt_build_headers)
+		--with-headers="${ESYSROOT}$(alt_headers)"
 		--prefix="$(host_eprefix)/usr"
 		${EXTRA_ECONF}
 	)
@@ -1323,38 +1317,36 @@ src_test() {
 # src_install
 
 run_locale_gen() {
-	# if the host locales.gen contains no entries, we'll install everything
-	local root="$1"
-	local inplace=""
+	local prefix=$1 user_config config
+	local -a hasversion_opts localegen_args
 
-	if [[ "${root}" == "--inplace-glibc" ]] ; then
-		inplace="--inplace-glibc"
-		root="$2"
+	if [[ ${EBUILD_PHASE_FUNC} == src_install ]]; then
+		hasversion_opts=( -b )
 	fi
 
-	local locale_list="${root%/}/etc/locale.gen"
-
-	pushd "${ED}"/$(get_libdir) >/dev/null
-
-	if [[ -z $(locale-gen --list --config "${locale_list}") ]] ; then
-		[[ -z ${inplace} ]] && ewarn "Generating all locales; edit /etc/locale.gen to save time/space"
-		locale_list="${root%/}/usr/share/i18n/SUPPORTED"
+	if has_version "${hasversion_opts[@]}" '>=sys-apps/locale-gen-3'; then
+		localegen_args=( --prefix "${prefix}" )
+	else
+		config="${prefix}/usr/share/i18n/SUPPORTED"
+		user_config="${prefix}/etc/locale.gen"
+		if [[ ${EBUILD_PHASE_FUNC} == src_install ]]; then
+			# For USE=compile-locales, all locales should be built.
+			mkdir -p -- "${prefix}/usr/lib/locale" || die
+		elif locale-gen --list --config "${user_config}" | read -r; then
+			config=${user_config}
+		fi
+		localegen_args=( --config "${config}" --destdir "${prefix}" )
 	fi
 
-	# bug 736794: we need to be careful with the parallelization... the number of
-	# processors saved in the environment of a binary package may differ strongly
-	# from the number of processes available during postinst
-	local mygenjobs="$(makeopts_jobs)"
-	if [[ "${EMERGE_FROM}" == "binary" ]] ; then
-		mygenjobs="$(nproc)"
+	# bug 736794: we need to be careful with the parallelization... the
+	# number of processors saved in the environment of a binary package may
+	# differ strongly from the number of processes available during postinst
+	if [[ ${EMERGE_FROM} != binary ]]; then
+		localegen_args+=( --jobs "$(makeopts_jobs)" )
 	fi
 
-	set -- locale-gen ${inplace} --jobs "${mygenjobs}" --config "${locale_list}" \
-		--destdir "${root}"
-	echo "$@"
-	"$@"
-
-	popd >/dev/null
+	printf 'Executing: locale-gen %s\n' "${localegen_args[*]@Q}" >&2
+	locale-gen "${localegen_args[@]}"
 }
 
 glibc_do_src_install() {
@@ -1569,8 +1561,8 @@ glibc_do_src_install() {
 	rm -f "${ED}"/etc/localtime
 
 	# Generate all locales if this is a native build as locale generation
-	if use compile-locales && ! is_crosscompile ; then
-		run_locale_gen --inplace-glibc "${ED}/"
+	if use compile-locales && ! is_crosscompile && ! run_locale_gen "${ED}"; then
+		die "locale-gen(1) unexpectedly failed during the ${EBUILD_PHASE_FUNC} phase"
 	fi
 }
 
@@ -1720,7 +1712,32 @@ pkg_postinst() {
 		# window for the affected programs.
 		use loong && glibc_refresh_ldconfig
 
-		use compile-locales || run_locale_gen "${EROOT}/"
+		if ! use compile-locales && ! run_locale_gen "${EROOT}"; then
+			ewarn "locale-gen(1) unexpectedly failed during the ${EBUILD_PHASE_FUNC} phase"
+		fi
+
+		# If fixincludes was/is active for a particular GCC slot, we
+		# must refresh it. See bug #933282 and GCC's documentation:
+		# https://gcc.gnu.org/onlinedocs/gcc/Fixed-Headers.html
+		#
+		# TODO: Could this be done for cross? Some care would be needed
+		# to pass the right arguments.
+		while IFS= read -r -d $'\0' slot ; do
+			local mkheaders_path="${BROOT}"/usr/libexec/gcc/${CBUILD}/${slot##*/}/install-tools/mkheaders
+			local pthread_h="${BROOT}"/usr/lib/gcc/${CBUILD}/${slot##*/}/include-fixed/pthread.h
+			if [[ -x ${mkheaders_path} ]] ; then
+				ebegin "Refreshing fixincludes for ${CBUILD} with gcc-${slot##*/}"
+				${mkheaders_path} -v
+				eend $?
+			elif [[ -f ${pthread_h} ]] ; then
+				# fixincludes might have been enabled in the past for this
+				# GCC slot but not since we fixed toolchain.eclass to install
+				# mkheaders, so we need to manually delete pthread.h at least.
+				ebegin "Deleting stale fixincludes'd pthread.h for ${CBUILD} with gcc-${slot##*/}"
+				mv -v "${pthread_h}" "${pthread_h}.bak"
+				eend $?
+			fi
+		done < <(find "${BROOT}"/usr/libexec/gcc/${CBUILD}/ -mindepth 1 -maxdepth 1 -type d -print0)
 	fi
 
 	upgrade_warning
