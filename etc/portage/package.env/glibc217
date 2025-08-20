@@ -2,6 +2,7 @@ app-emulation/qemu gcc7
 sys-boot/grub gcc7
 dev-build/ninja gcc7
 dev-debug/gdb gcc7
+sys-apps/kmod gcc7
 
 app-crypt/rhash gnu99
 dev-libs/gmp gnu99
