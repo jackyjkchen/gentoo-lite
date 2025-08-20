@@ -1,5 +1,6 @@
 app-emulation/qemu gcc7
 sys-boot/grub gcc7
+dev-build/ninja gcc7
 dev-debug/gdb gcc7
 
 app-crypt/rhash gnu99

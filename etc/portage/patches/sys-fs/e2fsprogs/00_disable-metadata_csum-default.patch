@@ -1,16 +1,3 @@
-diff --git a/misc/create_inode_libarchive.c b/misc/create_inode_libarchive.c
-index 9c8e53e..bc35894 100644
---- a/misc/create_inode_libarchive.c
-+++ b/misc/create_inode_libarchive.c
-@@ -18,7 +18,7 @@
- #include "support/nls-enable.h"
- 
- #if (!(defined(CONFIG_DLOPEN_LIBARCHIVE) || defined(HAVE_ARCHIVE_H)) || \
--     defined(CONFIG_DIABLE_LIBARCHIVE))
-+     defined(CONFIG_DISABLE_LIBARCHIVE))
- 
- /* If ./configure was run with --without-libarchive, then only
-  * __populate_fs_from_tar() remains in this file and will return an error. */
 diff --git a/misc/mke2fs.conf.in b/misc/mke2fs.conf.in
 index b7fc95d..e10d7d0 100644
 --- a/misc/mke2fs.conf.in
