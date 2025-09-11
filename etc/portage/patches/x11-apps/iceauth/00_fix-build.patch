@@ -1,0 +1,12 @@
+diff --git a/process.c b/process.c
+index ac1b546..be82bd4 100644
+--- a/process.c
++++ b/process.c
+@@ -27,6 +27,7 @@ in this Software without prior written authorization from The Open Group.
+  */
+ 
+ #include "iceauth.h"
++#include <stdint.h>
+ #include <ctype.h>
+ #include <errno.h>
+ #include <sys/types.h>

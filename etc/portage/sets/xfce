@@ -1,6 +1,6 @@
 #app-admin/conky
 app-editors/mousepad
-app-i18n/fcitx-cloudpinyin
+app-i18n/fcitx
 media-fonts/wqy-microhei
 x11-apps/xrandr
 x11-misc/lightdm

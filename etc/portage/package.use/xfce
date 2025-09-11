@@ -9,6 +9,7 @@ app-text/xmlto -text
 app-text/xmlto -text
 dev-db/sqlite secure-delete
 dev-libs/libdbusmenu -gtk gtk3
+dev-python/pillow -truetype
 media-libs/freetype -harfbuzz png
 media-libs/mesa -llvm -vulkan
 media-libs/tiff -opengl
@@ -22,3 +23,4 @@ x11-misc/xscreensaver -gdk-pixbuf -gtk
 xfce-base/thunar -trash-panel-plugin -udisks
 xfce-base/xfce4-meta minimal -upower
 xfce-base/xfce4-session -xscreensaver
+xfce-base/xfce4-settings -upower
