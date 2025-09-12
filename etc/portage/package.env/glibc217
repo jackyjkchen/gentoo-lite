@@ -3,7 +3,8 @@ dev-build/cmake gcc8
 dev-build/ninja gcc8
 dev-debug/gdb gcc8
 dev-lang/python gcc8
-dev-python/* gcc8
+dev-python/cython gcc8
+dev-python/lxml gcc8
 sys-apps/kmod gcc8
 sys-boot/grub gcc8
 
