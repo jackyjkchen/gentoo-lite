@@ -1,5 +1,5 @@
 <sys-libs/glibc-2.18
-<sys-devel/gcc-8
+<sys-devel/gcc-9
 <sys-devel/binutils-2.31
 <sys-libs/binutils-libs-2.31
 <virtual/udev-217

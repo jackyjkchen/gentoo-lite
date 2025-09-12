@@ -1,0 +1,14 @@
+diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt
+index fd2d963..9c387ae 100644
+--- a/source/CMakeLists.txt
++++ b/source/CMakeLists.txt
+@@ -377,7 +377,7 @@ if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+   find_library(LIBRT rt)
+   if(LIBRT)
+     foreach(target ${SPIRV_TOOLS_TARGETS})
+-      target_link_libraries(${target} PUBLIC rt)
++      target_link_libraries(${target} PUBLIC rt stdc++fs)
+     endforeach()
+   endif()
+ endif()
+

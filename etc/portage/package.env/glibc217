@@ -1,10 +1,12 @@
-app-emulation/qemu gcc7
-sys-boot/grub gcc7
-dev-build/ninja gcc7
-dev-lang/python gcc7
-dev-python/* gcc7
-dev-debug/gdb gcc7
-sys-apps/kmod gcc7
+# baseos
+app-emulation/qemu gcc8
+dev-build/cmake gcc8
+dev-build/ninja gcc8
+dev-debug/gdb gcc8
+dev-lang/python gcc8
+dev-python/* gcc8
+sys-apps/kmod gcc8
+sys-boot/grub gcc8
 
 app-crypt/rhash gnu99
 sys-apps/lm-sensors gnu99
@@ -17,3 +19,13 @@ dev-libs/tree-sitter gnu_source
 dev-libs/libgcrypt pthread
 
 sys-apps/sandbox stack_realign
+
+# xfce
+dev-libs/icu gcc8
+dev-util/spirv-tools gcc8
+media-libs/mesa gcc8
+x11-misc/lightdm gcc8
+x11-misc/shared-mime-info gcc8 stdcxxfs
+
+gnome-base/dconf gnu99
+x11-libs/gtk+ gnu99

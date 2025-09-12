@@ -1,0 +1,14 @@
+diff --git a/include/os.h b/include/os.h
+index 7db2408..b0c81f1 100644
+--- a/include/os.h
++++ b/include/os.h
+@@ -51,7 +51,7 @@ SOFTWARE.
+ #include <stdarg.h>
+ #include <stdint.h>
+ #if defined(HAVE_REALLOCARRAY)
+-#include <stdlib.h>       /* for reallocarray */
++void *reallocarray(void *ptr, size_t nmemb, size_t size);
+ #endif
+ #include <string.h>
+ #ifdef MONOTONIC_CLOCK
+

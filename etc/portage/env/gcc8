@@ -1,0 +1,2 @@
+CC='gcc-8.5.0'
+CXX='g++-8.5.0 -D_GLIBCXX_USE_CXX11_ABI=0'
