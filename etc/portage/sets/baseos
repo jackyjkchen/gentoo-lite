@@ -1,8 +1,6 @@
-app-admin/sudo
 app-editors/vim
 app-portage/gentoolkit
 app-shells/bash-completion
 dev-util/diffstat
 sys-apps/dstat
-sys-apps/ethtool
 sys-process/htop
