@@ -5,7 +5,7 @@ EAPI=8
 
 DESCRIPTION=""
 HOMEPAGE=""
-SRC_URI="https://mirrors.ustc.edu.cn/kernel.org/linux/kernel/v4.x/linux-${PV}.tar.xz"
+SRC_URI="https://mirrors.ustc.edu.cn/kernel.org/linux/kernel/v2.6/longterm/v2.6.32/linux-${PV}.tar.xz"
 
 LICENSE=""
 KEYWORDS="amd64"
@@ -26,4 +26,5 @@ src_compile() {
 src_install() {
 	emake INSTALL_HDR_PATH="${ED}"/usr headers_install || die
 	find "${ED}"/usr -name '..install.cmd' -delete || die
+	rm -v "${ED}"/usr/include/scsi/scsi.h
 }

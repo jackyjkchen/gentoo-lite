@@ -24,8 +24,6 @@ src_compile() {
 }
 
 src_install() {
-	TARGET_PREFIX="${TOOL_PREFIX}-linux-gnu"
-	UNIX_PREFIX="/usr"
 	emake INSTALL_HDR_PATH="${ED}"/usr headers_install || die
 	find "${ED}"/usr -name '..install.cmd' -delete || die
 }

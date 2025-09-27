@@ -3,7 +3,7 @@
 
 EAPI=8
 
-KV_min=2.6.39
+KV_min=2.6.32
 
 inherit autotools linux-info multilib multilib-minimal
 
@@ -81,6 +81,7 @@ src_prepare() {
 
 	eapply "${FILESDIR}"/${PN}-include-sysmacros-header.patch
 	eapply "${FILESDIR}"/00_eudev-3.1.5-fix-gcc494.patch
+	eapply "${FILESDIR}"/01_eudev-3.1.5-fix-kernel2632.patch
 
 }
 

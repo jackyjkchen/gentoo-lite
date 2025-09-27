@@ -1,0 +1,20 @@
+diff --git a/src/udev/udev-builtin-input_id.c b/src/udev/udev-builtin-input_id.c
+index b14190e..3163864 100644
+--- a/src/udev/udev-builtin-input_id.c
++++ b/src/udev/udev-builtin-input_id.c
+@@ -41,6 +41,15 @@
+ #define LONG(x) ((x)/BITS_PER_LONG)
+ #define test_bit(bit, array)    ((array[LONG(bit)] >> OFF(bit)) & 1)
+ 
++
++#ifndef BTN_TRIGGER_HAPPY
++#define BTN_TRIGGER_HAPPY 0x2c0
++#endif
++
++#ifndef INPUT_PROP_MAX
++#define INPUT_PROP_MAX 0x1f
++#endif
++
+ static inline int abs_size_mm(const struct input_absinfo *absinfo) {
+         /* Resolution is defined to be in units/mm for ABS_X/Y */
+         return (absinfo->maximum - absinfo->minimum) / absinfo->resolution;
