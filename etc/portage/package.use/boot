@@ -1,5 +1,5 @@
 app-portage/portage-utils -qmanifest
-media-libs/freetype -png
+media-libs/freetype -harfbuzz -png
 net-misc/chrony -nts
 sys-firmware/intel-microcode initramfs
-sys-kernel/linux-firmware initramfs compress-xz
+sys-kernel/linux-firmware initramfs
