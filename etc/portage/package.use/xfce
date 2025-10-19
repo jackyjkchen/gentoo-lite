@@ -10,7 +10,7 @@ app-text/xmlto -text
 dev-db/sqlite secure-delete
 dev-libs/libdbusmenu -gtk gtk3
 dev-python/pillow -truetype
-media-libs/freetype -harfbuzz png
+media-libs/freetype png
 media-libs/mesa -llvm -vulkan
 media-libs/tiff -opengl
 pp-text/xmlto -text
