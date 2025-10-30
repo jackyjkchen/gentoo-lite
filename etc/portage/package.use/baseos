@@ -1,5 +1,6 @@
 */* -doc -man -seccomp PYTHON_TARGETS: -* python3_13 PYTHON_SINGLE_TARGET: -* python3_13
 app-admin/sudo -sendmail
+app-alternatives/gpg -ssl
 app-arch/pigz symlink
 app-arch/tar minimal
 app-crypt/gnupg -ssl -tofu
