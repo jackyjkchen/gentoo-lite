@@ -9,10 +9,10 @@ app-text/xmlto -text
 app-text/xmlto -text
 dev-db/sqlite secure-delete
 dev-libs/libdbusmenu -gtk gtk3
-dev-python/pillow -truetype
+dev-python/pillow -avif -truetype -webp
 media-libs/freetype png
 media-libs/mesa -llvm -vulkan
-media-libs/tiff -opengl
+media-libs/tiff -opengl -webp
 pp-text/xmlto -text
 sys-devel/gcc -fortran graphite zstd
 sys-devel/llvm libedit LLVM_TARGETS: -BPF -NVPTX
