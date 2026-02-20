@@ -1,4 +1,4 @@
-*/* -doc -man -seccomp PYTHON_TARGETS: -* python3_13 PYTHON_SINGLE_TARGET: -* python3_13
+*/* -debuginfod -doc -man -seccomp PYTHON_TARGETS: -* python3_13 PYTHON_SINGLE_TARGET: -* python3_13
 app-admin/sudo -sendmail
 app-alternatives/gpg -ssl
 app-arch/pigz symlink
@@ -8,6 +8,7 @@ app-editors/vim -crypt
 app-text/mandoc system-man
 dev-lang/perl minimal
 dev-lang/python -sqlite -bluetooth -ensurepip
+dev-libs/elfutils -libarchive
 dev-libs/glib -elf -mime
 dev-perl/* minimal
 dev-python/jaraco-text -cli
@@ -21,7 +22,7 @@ sys-apps/iproute2 minimal
 sys-apps/man-db -nls
 sys-apps/man-pages -*
 sys-apps/miscfiles minimal
-sys-apps/portage -rsync-verify
+sys-apps/portage -rsync-verify build
 sys-apps/smartmontools -daemon
 sys-apps/sysvinit -nls
 sys-apps/util-linux -nls
