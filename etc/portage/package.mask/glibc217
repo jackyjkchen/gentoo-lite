@@ -6,6 +6,7 @@
 >=net-misc/dhcpcd-7
 >=net-misc/openssh-9.8
 >=sys-apps/busybox-1.35
+>sys-apps/coreutils-9.9-r1
 >=sys-apps/kbd-2.7
 >=sys-apps/locale-gen-3
 >=sys-apps/openrc-0.45

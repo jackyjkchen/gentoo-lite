@@ -1,0 +1,41 @@
+From 50e004cbb1c4d88f028029b6de31a0cae475e7f3 Mon Sep 17 00:00:00 2001
+From: Mike Frysinger <vapier@gentoo.org>
+Date: Thu, 2 Apr 2009 01:29:06 +0000
+Subject: [PATCH 2/4] tests: sandbox fixes
+
+These tests only run as non-root, so giving them temp write access to the
+root dir is safe since normal unix access will deny it.
+
+Bug: https://bugs.gentoo.org/259876
+---
+ tests/dd/skip-seek-past-dev.sh | 1 +
+ tests/touch/not-owner.sh       | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/tests/dd/skip-seek-past-dev.sh b/tests/dd/skip-seek-past-dev.sh
+index cb454b9..643819e 100755
+--- a/tests/dd/skip-seek-past-dev.sh
++++ b/tests/dd/skip-seek-past-dev.sh
+@@ -48,6 +48,7 @@ echo "dd: 'standard input': cannot skip: Invalid argument
+ 0+0 records out" > err_ok || framework_failure_
+ compare err_ok err || fail=1
+ 
++env SANDBOX_WRITE=${SANDBOX_WRITE}:$device \
+ timeout 10 dd bs=1 seek=$DEV_OFLOW count=0 status=noxfer > "$device" 2> err
+ test "$?" = "1" || fail=1
+ echo "dd: 'standard output': cannot seek: Invalid argument
+diff --git a/tests/touch/not-owner.sh b/tests/touch/not-owner.sh
+index 4e47398..69d481b 100755
+--- a/tests/touch/not-owner.sh
++++ b/tests/touch/not-owner.sh
+@@ -34,6 +34,7 @@ skip_if_root_
+ # Before fileutils-4.1, we'd get the following misleading
+ # diagnostic instead of '...: Permission denied'.
+ # touch: creating '/': Is a directory
++env SANDBOX_WRITE=${SANDBOX_WRITE}:/ \
+ touch / > out 2>&1 && fail=1
+ 
+ # On SunOS4, EPERM is 'Not owner'.
+-- 
+2.48.0
+
