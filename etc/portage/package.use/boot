@@ -2,5 +2,6 @@ app-portage/portage-utils -qmanifest
 dev-vcs/git -gpg
 media-libs/freetype -harfbuzz -png
 net-misc/chrony -nts
+sys-boot/grub -branding
 sys-firmware/intel-microcode initramfs
 sys-kernel/linux-firmware initramfs
