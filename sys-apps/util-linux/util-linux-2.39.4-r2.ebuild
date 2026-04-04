@@ -17,7 +17,7 @@ HOMEPAGE="https://www.kernel.org/pub/linux/utils/util-linux/ https://github.com/
 VERIFY_SIG_OPENPGP_KEY_PATH=/usr/share/openpgp-keys/karelzak.asc
 inherit verify-sig
 
-KEYWORDS="amd64"
+KEYWORDS="amd64 mips"
 
 SRC_URI="https://www.kernel.org/pub/linux/utils/util-linux/v${PV:0:4}/${MY_P}.tar.xz"
 SRC_URI+=" verify-sig? ( https://www.kernel.org/pub/linux/utils/util-linux/v${PV:0:4}/${MY_P}.tar.sign )"
@@ -261,13 +261,13 @@ multilib_src_configure() {
 			--disable-pylibmount
 			--disable-raw
 			--disable-vipw
+			--disable-schedutils
 			--enable-agetty
 			--enable-bash-completion
 			--enable-line
 			--enable-partx
 			--enable-rename
 			--enable-rfkill
-			--enable-schedutils
 			--with-systemdsystemunitdir="$(systemd_get_systemunitdir)"
 			$(use_enable caps setpriv)
 			$(use_enable cramfs)
