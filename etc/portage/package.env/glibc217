@@ -19,5 +19,3 @@ sys-libs/pam gnu99
 dev-libs/tree-sitter gnu_source
 
 dev-libs/libgcrypt pthread
-
-sys-apps/sandbox stack_realign
