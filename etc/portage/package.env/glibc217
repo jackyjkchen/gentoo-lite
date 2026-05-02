@@ -7,6 +7,7 @@ dev-python/cython gcc8
 dev-python/lxml gcc8
 sys-apps/kmod gcc8
 sys-boot/grub gcc8
+sys-libs/zlib gcc8
 
 app-crypt/rhash gnu99
 dev-util/xxd gnu99

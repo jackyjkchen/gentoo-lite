@@ -16,24 +16,12 @@ inherit flag-o-matic python-any-r1 toolchain-funcs verify-sig
 DESCRIPTION="Standard GNU utilities (chmod, cp, dd, ls, sort, tr, head, wc, who,...)"
 HOMEPAGE="https://www.gnu.org/software/coreutils/"
 
-if [[ ${PV} == 9999 ]] ; then
-	EGIT_REPO_URI="https://git.savannah.gnu.org/git/coreutils.git"
-	inherit git-r3
-elif [[ ${PV} == *_p* ]] ; then
-	# Note: could put this in devspace, but if it's gone, we don't want
-	# it in tree anyway. It's just for testing.
-	MY_SNAPSHOT="$(ver_cut 1-2).327-71a8c"
-	SRC_URI="https://www.pixelbeat.org/cu/coreutils-${MY_SNAPSHOT}.tar.xz -> ${P}.tar.xz"
-	SRC_URI+=" verify-sig? ( https://www.pixelbeat.org/cu/coreutils-${MY_SNAPSHOT}.tar.xz.sig -> ${P}.tar.xz.sig )"
-	S="${WORKDIR}"/${PN}-${MY_SNAPSHOT}
-else
-	SRC_URI="
-		mirror://gnu/${PN}/${P}.tar.xz
-		verify-sig? ( mirror://gnu/${PN}/${P}.tar.xz.sig )
-	"
+SRC_URI="
+	mirror://gnu/${PN}/${P}.tar.xz
+	verify-sig? ( mirror://gnu/${PN}/${P}.tar.xz.sig )
+"
 
-	KEYWORDS="~alpha amd64 arm arm64 ~hppa ~loong ~m68k ~mips ppc ppc64 ~riscv ~s390 ~sparc x86"
-fi
+KEYWORDS="amd64"
 
 LICENSE="GPL-3+"
 SLOT="0"
