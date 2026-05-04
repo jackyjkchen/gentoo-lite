@@ -15,6 +15,7 @@ dev-python/jaraco-text -cli
 dev-python/pydantic -native-extensions
 dev-vcs/git -perl
 net-misc/curl -adns -http2 -http3 -httpsrr -psl -quic CURL_QUIC: -openssl
+net-libs/gnutls -post-quantum
 sys-apps/diffutils -nls
 sys-apps/help2man -nls
 sys-apps/iproute2 -iptables
