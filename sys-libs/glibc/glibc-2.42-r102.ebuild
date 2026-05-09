@@ -12,7 +12,7 @@ TMPFILES_OPTIONAL=1
 EMULTILIB_PKG="true"
 
 # Gentoo patchset (ignored for live ebuilds)
-PATCH_VER=7
+PATCH_VER=9
 PATCH_DEV=dilfridge
 
 # gcc mulitilib bootstrap files version
@@ -43,7 +43,7 @@ HOMEPAGE="https://www.gnu.org/software/libc/"
 KEYWORDS="sparc"
 SRC_URI="mirror://gnu/glibc/${P}.tar.xz"
 SRC_URI+=" verify-sig? ( mirror://gnu/glibc/${P}.tar.xz.sig )"
-SRC_URI+=" https://dev.gentoo.org/~${PATCH_DEV}/distfiles/${P}-patches-${PATCH_VER}.tar.xz"
+SRC_URI+=" https://distfiles.gentoo.org/pub/proj/toolchain/glibc/patches/${P}-patches-${PATCH_VER}.tar.xz"
 
 SRC_URI+=" multilib-bootstrap? ( https://dev.gentoo.org/~dilfridge/distfiles/gcc-multilib-bootstrap-${GCC_BOOTSTRAP_VER}.tar.xz )"
 SRC_URI+=" systemd? ( https://gitweb.gentoo.org/proj/toolchain/glibc-systemd.git/snapshot/glibc-systemd-${GLIBC_SYSTEMD_VER}.tar.gz )"
