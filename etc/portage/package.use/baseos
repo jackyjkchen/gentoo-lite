@@ -1,4 +1,4 @@
-*/* -debuginfod -doc -man -seccomp PYTHON_TARGETS: -* python3_13 PYTHON_SINGLE_TARGET: -* python3_13
+*/* -debuginfod -doc -man -seccomp PYTHON_TARGETS: -* python3_14 PYTHON_SINGLE_TARGET: -* python3_14
 app-admin/sudo -sendmail
 app-alternatives/gpg -ssl
 app-arch/pigz symlink
