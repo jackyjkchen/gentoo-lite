@@ -7,6 +7,7 @@ dev-libs/tree-sitter gcc8
 dev-python/cython gcc8
 dev-python/lxml gcc8
 sys-apps/kmod gcc8
+sys-apps/portage gcc8
 sys-boot/grub gcc8
 sys-libs/zlib gcc8
 
